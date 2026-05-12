@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="12" fill="#0a231d"/>
+  <g fill="none" stroke="#c69b57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Mountain silhouette -->
+    <path d="M8 48 L20 28 L28 36 L38 20 L56 48 Z"/>
+    <!-- Horizon line -->
+    <path d="M8 48 L56 48" stroke="#f1dcb4" stroke-opacity="0.6"/>
+    <!-- Fog wisp -->
+    <path d="M14 40 Q24 36 34 40 Q44 44 52 40" stroke="#f1dcb4" stroke-opacity="0.5" stroke-width="1.5"/>
+  </g>
+</svg>
