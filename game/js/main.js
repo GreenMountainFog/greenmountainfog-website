@@ -70,13 +70,44 @@ function drawPixels(g, pixels, ox, oy, scale = 1) {
 function generateTextures(scene) {
   const g = scene.add.graphics();
 
-  // ── Grass tile 16×16
+  // ── Grass tile 16×16 (NES RPG style with more detail)
   g.clear();
   drawRect(g, 0, 0, 16, 16, PAL.grass);
-  drawRect(g, 2, 3,  2,  1, PAL.grassLight);
-  drawRect(g, 10, 11, 2, 1, PAL.grassLight);
-  drawRect(g, 6, 7,  1,  2, PAL.grassLight);
+  // texture details - scattered lighter spots
+  drawRect(g, 2, 2, 1, 1, PAL.grassLight);
+  drawRect(g, 7, 1, 1, 1, PAL.grassLight);
+  drawRect(g, 12, 3, 1, 1, PAL.grassLight);
+  drawRect(g, 4, 6, 1, 1, PAL.grassLight);
+  drawRect(g, 10, 5, 1, 1, PAL.grassLight);
+  drawRect(g, 1, 9, 1, 1, PAL.grassLight);
+  drawRect(g, 6, 10, 1, 1, PAL.grassLight);
+  drawRect(g, 13, 9, 1, 1, PAL.grassLight);
+  drawRect(g, 3, 13, 1, 1, PAL.grassLight);
+  drawRect(g, 9, 12, 1, 1, PAL.grassLight);
+  drawRect(g, 14, 14, 1, 1, PAL.grassLight);
+  // darker spots for depth
+  drawRect(g, 5, 3, 1, 1, 0x2a6a1e);
+  drawRect(g, 11, 7, 1, 1, 0x2a6a1e);
+  drawRect(g, 2, 11, 1, 1, 0x2a6a1e);
+  drawRect(g, 8, 14, 1, 1, 0x2a6a1e);
   g.generateTexture('grass', 16, 16);
+
+  // ── Grass variant tile
+  g.clear();
+  drawRect(g, 0, 0, 16, 16, 0x388a28);
+  drawRect(g, 1, 1, 1, 1, PAL.grassLight);
+  drawRect(g, 5, 4, 1, 1, PAL.grassLight);
+  drawRect(g, 11, 2, 1, 1, PAL.grassLight);
+  drawRect(g, 3, 8, 1, 1, PAL.grassLight);
+  drawRect(g, 9, 10, 1, 1, PAL.grassLight);
+  drawRect(g, 14, 6, 1, 1, PAL.grassLight);
+  drawRect(g, 7, 13, 1, 1, PAL.grassLight);
+  drawRect(g, 0, 14, 1, 1, 0x2a6a1e);
+  drawRect(g, 12, 12, 1, 1, 0x2a6a1e);
+  // small grass blades
+  drawRect(g, 3, 5, 1, 2, 0x4eae38);
+  drawRect(g, 10, 8, 1, 2, 0x4eae38);
+  g.generateTexture('grass2', 16, 16);
 
   // ── Dirt / path tile 16×16
   g.clear();
@@ -85,52 +116,95 @@ function generateTextures(scene) {
   drawRect(g, 11, 2, 2,  1, PAL.pathDark);
   g.generateTexture('dirt', 16, 16);
 
-  // ── Tree 24×32
+  // ── Tree 24×32 (NES RPG style - round canopy)
   g.clear();
   // trunk
-  drawRect(g, 9, 20, 6, 12, PAL.wood);
-  drawRect(g, 10, 20, 4, 12, PAL.woodLight);
-  // canopy layers
-  drawRect(g, 4, 14, 16, 10, PAL.treeGreen);
-  drawRect(g, 0, 8,  24, 10, PAL.treeGreen);
-  drawRect(g, 4, 2,  16, 10, PAL.treeGreen);
-  // highlights
-  drawRect(g, 5, 3,  8,  3, PAL.treeTop);
-  drawRect(g, 2, 9,  8,  3, PAL.treeTop);
-  drawRect(g, 6, 15, 8,  3, PAL.treeTop);
+  drawRect(g, 10, 22, 4, 10, PAL.wood);
+  drawRect(g, 11, 22, 2, 10, PAL.woodLight);
+  // canopy - round shape built up
+  drawRect(g, 6, 16, 12, 6, PAL.treeGreen);
+  drawRect(g, 4, 10, 16, 8, PAL.treeGreen);
+  drawRect(g, 2, 6,  20, 8, PAL.treeGreen);
+  drawRect(g, 4, 2,  16, 6, PAL.treeGreen);
+  drawRect(g, 6, 0,  12, 4, PAL.treeGreen);
+  // canopy highlights (top-left light source)
+  drawRect(g, 6, 2,  6,  3, PAL.treeTop);
+  drawRect(g, 4, 6,  8,  3, PAL.treeTop);
+  drawRect(g, 3, 8,  4,  2, PAL.treeTop);
+  // canopy shadow (bottom-right)
+  drawRect(g, 14, 12, 4, 3, 0x145a06);
+  drawRect(g, 10, 16, 6, 2, 0x145a06);
+  // leaf detail dots
+  drawRect(g, 8, 4, 1, 1, 0x3ab828);
+  drawRect(g, 14, 7, 1, 1, 0x3ab828);
+  drawRect(g, 6, 11, 1, 1, 0x3ab828);
   g.generateTexture('tree', 24, 32);
 
-  // ── Rock 16×12
+  // ── Rock 16×14 (NES style boulder)
   g.clear();
-  drawRect(g, 2, 4,  12, 8, PAL.rock);
-  drawRect(g, 0, 6,  16, 4, PAL.rock);
-  drawRect(g, 4, 0,  8,  6, PAL.rock);
-  drawRect(g, 4, 1,  4,  2, PAL.rockLight);
-  drawRect(g, 14, 7, 2,  2, PAL.rockDark);
-  g.generateTexture('rock', 16, 12);
+  // main body
+  drawRect(g, 3, 6, 10, 8, PAL.rock);
+  drawRect(g, 1, 8, 14, 4, PAL.rock);
+  drawRect(g, 5, 4, 6, 4, PAL.rock);
+  // rounded top
+  drawRect(g, 4, 3, 8, 2, PAL.rock);
+  drawRect(g, 6, 2, 4, 2, PAL.rockLight);
+  // highlights (top-left light)
+  drawRect(g, 4, 4, 3, 2, PAL.rockLight);
+  drawRect(g, 3, 7, 2, 2, PAL.rockLight);
+  // shadows (bottom-right)
+  drawRect(g, 10, 8, 3, 3, PAL.rockDark);
+  drawRect(g, 7, 12, 5, 2, PAL.rockDark);
+  drawRect(g, 2, 12, 12, 1, 0x444444); // ground shadow
+  // crack detail
+  drawRect(g, 7, 6, 1, 3, PAL.rockDark);
+  drawRect(g, 8, 8, 1, 1, PAL.rockDark);
+  g.generateTexture('rock', 16, 14);
 
-  // ── House exterior 48×48
+  // ── House exterior 48×48 (Dragon Quest village style)
   g.clear();
-  // wall
-  drawRect(g, 0, 16, 48, 32, PAL.wallGray);
-  drawRect(g, 2, 18, 44, 28, PAL.wallGray);
-  // wall shading
-  drawRect(g, 0, 16, 3, 32, PAL.wallDark);
-  drawRect(g, 45, 16, 3, 32, PAL.wallDark);
-  // roof
-  drawRect(g, 0, 0, 48, 18, PAL.roof);
-  drawRect(g, 2, 2, 44, 14, PAL.roofDark);
-  drawRect(g, 4, 2, 10, 4, PAL.roofLight);
+  // wall base
+  drawRect(g, 2, 18, 44, 30, 0xd8c8a0); // cream stone wall
+  drawRect(g, 2, 18, 44, 1, 0xc0b080);  // wall top edge
+  drawRect(g, 2, 47, 44, 1, 0xa09060);  // wall bottom shadow
+  // brick lines
+  for (let by = 22; by < 47; by += 4) {
+    drawRect(g, 2, by, 44, 1, 0xc8b890);
+  }
+  // wall side shading
+  drawRect(g, 2, 18, 2, 30, 0xb8a880);
+  drawRect(g, 44, 18, 2, 30, 0xb8a880);
+  // roof - triangular look with tiles
+  drawRect(g, 0, 8, 48, 12, PAL.roof);
+  drawRect(g, 2, 6, 44, 4, PAL.roof);
+  drawRect(g, 6, 4, 36, 4, PAL.roofDark);
+  drawRect(g, 10, 2, 28, 4, PAL.roofDark);
+  drawRect(g, 14, 0, 20, 3, PAL.roofDark);
+  // roof tile lines
+  drawRect(g, 0, 12, 48, 1, PAL.roofLight);
+  drawRect(g, 0, 16, 48, 1, PAL.roofLight);
+  drawRect(g, 2, 8, 44, 1, PAL.roofLight);
   // door
-  drawRect(g, 18, 30, 12, 18, PAL.wood);
-  drawRect(g, 19, 31, 5,  16, PAL.woodLight);
-  // window
-  drawRect(g, 6, 22, 10, 8, PAL.waterLight);
-  drawRect(g, 6, 22, 10, 1, PAL.wallDark);
-  drawRect(g, 6, 22, 1,  8, PAL.wallDark);
-  drawRect(g, 32, 22, 10, 8, PAL.waterLight);
-  drawRect(g, 32, 22, 10, 1, PAL.wallDark);
-  drawRect(g, 32, 22, 1,  8, PAL.wallDark);
+  drawRect(g, 19, 30, 10, 18, PAL.wood);
+  drawRect(g, 20, 31, 8, 16, PAL.woodLight);
+  drawRect(g, 20, 31, 8, 1, 0x5a3a10); // door top
+  drawRect(g, 26, 38, 2, 2, 0xd4a030); // door knob
+  // windows with frames
+  drawRect(g, 5, 24, 10, 8, 0x4080c0);  // glass
+  drawRect(g, 5, 24, 10, 1, PAL.wood);   // frame top
+  drawRect(g, 5, 31, 10, 1, PAL.wood);   // frame bottom
+  drawRect(g, 5, 24, 1, 8, PAL.wood);    // frame left
+  drawRect(g, 14, 24, 1, 8, PAL.wood);   // frame right
+  drawRect(g, 10, 24, 1, 8, PAL.wood);   // crossbar
+  drawRect(g, 5, 28, 10, 1, PAL.wood);   // crossbar h
+  // right window
+  drawRect(g, 33, 24, 10, 8, 0x4080c0);
+  drawRect(g, 33, 24, 10, 1, PAL.wood);
+  drawRect(g, 33, 31, 10, 1, PAL.wood);
+  drawRect(g, 33, 24, 1, 8, PAL.wood);
+  drawRect(g, 42, 24, 1, 8, PAL.wood);
+  drawRect(g, 38, 24, 1, 8, PAL.wood);
+  drawRect(g, 33, 28, 10, 1, PAL.wood);
   g.generateTexture('house', 48, 48);
 
   // ── House interior 48×48
@@ -307,148 +381,39 @@ class BootScene extends Phaser.Scene {
   create() {
     generateTextures(this);
 
-    const W = 480, H = 360;
+    // Title screen
+    this.add.rectangle(240, 180, 480, 360, PAL.black);
+
+    // Title text
+    const titleStyle = { fontSize: '20px', fill: '#ffd700', fontFamily: 'Courier New', stroke: '#000', strokeThickness: 4 };
+    this.add.text(240, 80, 'GreenMountainFog', titleStyle).setOrigin(0.5);
+    this.add.text(240, 108, 'The Journey', { ...titleStyle, fontSize: '14px', fill: '#aaffaa' }).setOrigin(0.5);
+
+    // Draw mini elf on title
     const g = this.add.graphics();
+    // simple elf silhouette
+    g.fillStyle(PAL.elfGreen, 1); g.fillRect(224, 150, 32, 28);
+    g.fillStyle(PAL.elfSkin, 1); g.fillRect(228, 138, 24, 18);
+    g.fillStyle(PAL.elfHair, 1); g.fillRect(228, 138, 24, 6);
 
-    // ── Dark dusk sky
-    g.fillStyle(0x060d1a, 1);
-    g.fillRect(0, 0, W, H);
-
-    // Subtle atmosphere bands
-    g.fillStyle(0x081626, 0.6);
-    g.fillRect(0, 0, W, 130);
-    g.fillStyle(0x0c1e10, 0.35);
-    g.fillRect(0, 180, W, 72);
-
-    // ── Stars
-    g.fillStyle(0xffffff, 1);
-    [
-      [22,12],[55,7],[88,21],[122,5],[158,17],[195,30],[238,10],[275,23],
-      [318,15],[362,37],[398,20],[438,9],[47,43],[96,50],[150,40],[210,57],
-      [260,46],[332,54],[390,42],[450,35],[70,71],[134,67],[194,79],[250,75],
-      [312,83],[370,71],[430,79],[16,87],[98,91],[168,95],[234,89],
-    ].forEach(([sx, sy]) => g.fillRect(sx, sy, 1, 1));
-
-    // Brighter twinkle stars (2×2)
-    g.fillStyle(0xeeeebb, 1);
-    [[44,27],[188,13],[342,45],[422,17]].forEach(([sx, sy]) => g.fillRect(sx, sy, 2, 2));
-
-    // ── Moon (upper right, big pixel moon)
-    const mx = 385, my = 62;
-    g.fillStyle(0x182a1e, 0.45); g.fillCircle(mx, my, 38);  // glow
-    g.fillStyle(0xc8d8b0, 1);   g.fillCircle(mx, my, 28);  // body
-    // Pixel craters
-    g.fillStyle(0xaabf96, 1);
-    g.fillRect(mx-12, my-8,  7, 5);
-    g.fillRect(mx+5,  my+6,  9, 6);
-    g.fillRect(mx-5,  my+12, 6, 4);
-    g.fillStyle(0xb5c8a0, 1);
-    g.fillRect(mx-9,  my-5,  5, 3);
-    g.fillRect(mx+7,  my+9,  7, 4);
-
-    // ── Far hills silhouette (blue-green, distant)
-    g.fillStyle(0x0c2218, 1);
-    g.fillPoints([
-      {x:0,y:240},{x:0,y:205},{x:55,y:168},{x:115,y:188},{x:180,y:155},
-      {x:250,y:172},{x:320,y:158},{x:390,y:178},{x:450,y:165},{x:480,y:175},{x:480,y:240},
-    ], true);
-
-    // ── Near hills (darker)
-    g.fillStyle(0x0a1a0e, 1);
-    g.fillPoints([
-      {x:0,y:260},{x:0,y:228},{x:45,y:215},{x:100,y:225},{x:165,y:210},
-      {x:230,y:220},{x:295,y:206},{x:360,y:218},{x:425,y:212},{x:480,y:220},{x:480,y:260},
-    ], true);
-
-    // ── Ground / dark grass field
-    g.fillStyle(0x081408, 1);
-    g.fillRect(0, 254, W, H - 254);
-
-    // Grass tufts at horizon line
-    g.fillStyle(0x0c1c0a, 1);
-    for (let gx = 0; gx < W; gx += 6) g.fillRect(gx, 252, 2, 4);
-    g.fillStyle(0x0e2210, 1);
-    for (let gx = 3; gx < W; gx += 10) g.fillRect(gx, 250, 1, 5);
-
-    // Moonlight reflection path on ground
-    g.fillStyle(0x142216, 0.35);
-    g.fillRect(310, 254, 170, H - 254);
-
-    // ── Sword & Shield emblem (centered, above title)
-    const shX = 218, shY = 26;
-    // Shield body
-    g.fillStyle(0x1a3a6a, 1); g.fillRect(shX, shY, 20, 22);
-    g.fillStyle(0x2a5a9a, 1); g.fillRect(shX+1, shY+1, 18, 20);
-    // Shield gold design
-    g.fillStyle(0xffd700, 1); g.fillRect(shX+4, shY+3, 12, 8);
-    g.fillStyle(0xffaa00, 1); g.fillRect(shX+6, shY+12, 8, 5);
-    g.fillStyle(0xffd700, 1); g.fillRect(shX+8, shY+17, 4, 3);
-    // Shield highlight
-    g.fillStyle(0x4a80c8, 1); g.fillRect(shX+1, shY+1, 3, 10);
-    g.fillStyle(0x6090d0, 1); g.fillRect(shX, shY, 20, 1);
-    // Sword (right of shield, pointing up-right)
-    const swX = shX + 24, swY = shY - 6;
-    g.fillStyle(0xd0e8f8, 1); g.fillRect(swX+1, swY,    3, 22);  // blade
-    g.fillStyle(0xffffff, 1); g.fillRect(swX+1, swY,    1, 16);  // shine
-    g.fillStyle(0xd0a030, 1); g.fillRect(swX-3, swY+21, 11, 3);  // guard
-    g.fillStyle(0xe8b840, 1); g.fillRect(swX-2, swY+21, 1,  3);  // guard shine
-    g.fillStyle(0xc09020, 1); g.fillRect(swX+1, swY+24, 3,  7);  // grip
-    g.fillStyle(0xd4a030, 1); g.fillRect(swX+2, swY+30, 2,  2);  // pommel
-
-    // ── Main title
-    this.add.text(W/2, 90, 'GreenMountainFog', {
-      fontSize: '22px', fill: '#ffd700',
-      fontFamily: 'Courier New', stroke: '#020804', strokeThickness: 5,
+    const startText = this.add.text(240, 220, 'PRESS START', {
+      fontSize: '12px', fill: '#ffffff', fontFamily: 'Courier New'
     }).setOrigin(0.5);
 
-    this.add.text(W/2, 116, '— The Journey —', {
-      fontSize: '13px', fill: '#88ddaa',
-      fontFamily: 'Courier New', stroke: '#000', strokeThickness: 3,
+    this.add.text(240, 240, 'Tap anywhere or press SPACE', {
+      fontSize: '8px', fill: '#888888', fontFamily: 'Courier New'
     }).setOrigin(0.5);
 
-    // ── Elf walking across the field (right to left = walking toward adventure)
-    const elf = this.add.image(-20, 248, 'playerRight').setScale(2);
-    const elfShadow = this.add.graphics();
-    elfShadow.fillStyle(0x000000, 0.25);
-    elfShadow.fillEllipse(0, 0, 20, 5);
+    this.add.text(240, 340, '© 2024 GreenMountainFog', {
+      fontSize: '7px', fill: '#555555', fontFamily: 'Courier New'
+    }).setOrigin(0.5);
 
-    let elfX = -20, walkTick = 0;
+    // Blink start text
     this.time.addEvent({
-      delay: 180, loop: true,
-      callback: () => {
-        walkTick++;
-        elfX += 1.2;
-        if (elfX > W + 24) elfX = -24;
-        elf.x = elfX;
-        elf.y = 248 + (walkTick % 2 === 0 ? 0 : 1);  // walk bob
-        elfShadow.x = elfX;
-        elfShadow.y = 260;
-      },
+      delay: 500, loop: true,
+      callback: () => { startText.setVisible(!startText.visible); }
     });
 
-    // ── Start prompts (keyboard + touch)
-    const pressText = this.add.text(W/2, 305, 'PRESS SPACE  OR  ENTER', {
-      fontSize: '11px', fill: '#ffffff',
-      fontFamily: 'Courier New', stroke: '#000', strokeThickness: 3,
-    }).setOrigin(0.5);
-
-    const tapText = this.add.text(W/2, 321, 'TAP ANYWHERE TO START', {
-      fontSize: '10px', fill: '#aaeebb',
-      fontFamily: 'Courier New', stroke: '#000', strokeThickness: 2,
-    }).setOrigin(0.5);
-
-    this.add.text(W/2, 348, '© 2024 GreenMountainFog', {
-      fontSize: '8px', fill: '#335533', fontFamily: 'Courier New',
-    }).setOrigin(0.5);
-
-    // ── Blink both prompts together
-    let blinkOn = true;
-    this.time.addEvent({
-      delay: 550, loop: true,
-      callback: () => { blinkOn = !blinkOn; pressText.setVisible(blinkOn); tapText.setVisible(blinkOn); },
-    });
-
-    // ── Input: keyboard + touch/tap
     const startGame = () => this.scene.start('Overworld');
     this.input.keyboard.once('keydown-ENTER', startGame);
     this.input.keyboard.once('keydown-SPACE', startGame);
@@ -555,9 +520,34 @@ class OverworldScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, 576, 576);
     this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
 
+    // Show intro dialogue sequence
+    this.introActive = true;
+    this.introLines = [
+      "Welcome, young elf. Today feels\ndifferent somehow...",
+      "Perhaps you should look around\nthe village before setting off.",
+      "Check inside the houses, under\nrocks, and in the trees...",
+      "You never know what you\nmight find.",
+    ];
+    this.introIndex = 0;
     this.time.delayedCall(500, () => {
-      this.ui.showMessage('Welcome to Greenvale! Explore the village and find hidden items.', 3500);
+      this.showIntroLine();
     });
+  }
+
+  showIntroLine() {
+    if (this.introIndex >= this.introLines.length) {
+      this.introActive = false;
+      this.ui.hideMessage();
+      return;
+    }
+    const line = this.introLines[this.introIndex];
+    const prompt = this.introIndex < this.introLines.length - 1 ? '\n\n[SPACE / TAP A to continue]' : '\n\n[SPACE / TAP A to begin]';
+    this.ui.showMessage(line + prompt, 0);
+  }
+
+  advanceIntro() {
+    this.introIndex++;
+    this.showIntroLine();
   }
 
   buildVillage() {
@@ -566,10 +556,11 @@ class OverworldScene extends Phaser.Scene {
     this.mapWidth  = W * this.tileW;
     this.mapHeight = H * this.tileH;
 
-    // Ground layer
+    // Ground layer with variation
     for (let row = 0; row < H; row++) {
       for (let col = 0; col < W; col++) {
-        this.add.image(col * 16 + 8, row * 16 + 8, 'grass').setDepth(0);
+        const tex = ((col + row * 7) % 3 === 0) ? 'grass2' : 'grass';
+        this.add.image(col * 16 + 8, row * 16 + 8, tex).setDepth(0);
       }
     }
 
@@ -752,7 +743,7 @@ class OverworldScene extends Phaser.Scene {
     const interior = this.add.image(288, 190, 'houseInterior').setScale(4);
     const table    = this.add.image(270, 175, 'table').setScale(2);
     const chest    = this.add.image(340, 155, 'chest').setScale(2.5);
-    const exitText = this.add.text(210, 270, '[SPACE] Take item / [Q] Exit', {
+    const exitText = this.add.text(200, 270, '[SPACE/TAP A] Take item / [Q] Exit', {
       fontSize: '9px', fill: '#aaaaaa', fontFamily: 'Courier New'
     });
     const titleText = this.add.text(215, 105, '~ Inside the House ~', {
@@ -773,22 +764,29 @@ class OverworldScene extends Phaser.Scene {
 
     this.cameras.main.fadeIn(300);
 
-    // Interact to take sword
+    // Interact to take sword (keyboard + touch)
     const takeKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     const qKey    = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
 
-    const takeOnce = takeKey.once('down', () => {
+    const doTake = () => {
       if (!this.inventory.includes('sword')) {
         this.collectItem('sword', 'You found a SWORD inside the chest!');
       }
       this.exitHouse();
-      qKey.off('down', exitOnce);
-    });
+      qKey.off('down', doExit);
+      this.input.off('pointerdown', doTake);
+    };
 
-    const exitOnce = qKey.once('down', () => {
+    const doExit = () => {
       this.exitHouse();
-      takeKey.off('down', takeOnce);
-    });
+      takeKey.off('down', doTake);
+      this.input.off('pointerdown', doTake);
+    };
+
+    takeKey.once('down', doTake);
+    qKey.once('down', doExit);
+    // Touch: tap anywhere to take/exit
+    this.input.once('pointerdown', doTake);
   }
 
   exitHouse() {
@@ -854,7 +852,7 @@ class OverworldScene extends Phaser.Scene {
         this.ui.showMessage('Thank you for playing GreenMountainFog - The Journey!\n(More content coming soon...)', 0);
       });
     } else {
-      this.ui.showMessage(prefix + line + '\n\n[SPACE to continue]', 0);
+      this.ui.showMessage(prefix + line + '\n\n[SPACE / TAP A to continue]', 0);
     }
   }
 
@@ -868,20 +866,20 @@ class OverworldScene extends Phaser.Scene {
   update(time, delta) {
     if (this.inHouse) return;
 
+    // Read touch input from HTML overlay
+    const td = window.touchDir || {};
+    const touchJust = window.touchActionJust || false;
+    if (touchJust) window.touchActionJust = false;
+
     const speed = this.moveSpeed;
     let vx = 0, vy = 0;
 
-    if (!this.inDialogue && !this.questComplete) {
-      if (this.cursors.left.isDown)  { vx = -speed; this.facing = 'left';  this.player.setTexture('playerLeft'); }
-      if (this.cursors.right.isDown) { vx =  speed; this.facing = 'right'; this.player.setTexture('playerRight'); }
-      if (this.cursors.up.isDown)    { vy = -speed; this.facing = 'up';    this.player.setTexture('playerUp'); }
-      if (this.cursors.down.isDown)  { vy =  speed; this.facing = 'down';  this.player.setTexture('playerDown'); }
-    } else if (this.questComplete) {
-      // Still allow movement
-      if (this.cursors.left.isDown)  { vx = -speed; this.facing = 'left';  this.player.setTexture('playerLeft'); }
-      if (this.cursors.right.isDown) { vx =  speed; this.facing = 'right'; this.player.setTexture('playerRight'); }
-      if (this.cursors.up.isDown)    { vy = -speed; this.facing = 'up';    this.player.setTexture('playerUp'); }
-      if (this.cursors.down.isDown)  { vy =  speed; this.facing = 'down';  this.player.setTexture('playerDown'); }
+    const canMove = (!this.inDialogue && !this.introActive) || this.questComplete;
+    if (canMove) {
+      if (this.cursors.left.isDown || td.left)   { vx = -speed; this.facing = 'left';  this.player.setTexture('playerLeft'); }
+      if (this.cursors.right.isDown || td.right)  { vx =  speed; this.facing = 'right'; this.player.setTexture('playerRight'); }
+      if (this.cursors.up.isDown || td.up)        { vy = -speed; this.facing = 'up';    this.player.setTexture('playerUp'); }
+      if (this.cursors.down.isDown || td.down)    { vy =  speed; this.facing = 'down';  this.player.setTexture('playerDown'); }
     }
 
     this.player.setVelocity(vx, vy);
@@ -891,9 +889,14 @@ class OverworldScene extends Phaser.Scene {
 
     // Interact
     const interactPressed = Phaser.Input.Keyboard.JustDown(this.interactKey) ||
-                            Phaser.Input.Keyboard.JustDown(this.enterKey);
+                            Phaser.Input.Keyboard.JustDown(this.enterKey) ||
+                            touchJust;
 
     if (interactPressed) {
+      if (this.introActive) {
+        this.advanceIntro();
+        return;
+      }
       if (this.inDialogue) {
         this.advanceDialogue();
         return;
@@ -1123,6 +1126,13 @@ const config = {
   parent: 'game-container',
   backgroundColor: '#0a0a0a',
   pixelArt: true,
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+  },
+  input: {
+    activePointers: 3,
+  },
   physics: {
     default: 'arcade',
     arcade: { debug: false }
