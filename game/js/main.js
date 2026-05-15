@@ -307,42 +307,152 @@ class BootScene extends Phaser.Scene {
   create() {
     generateTextures(this);
 
-    // Title screen
-    this.add.rectangle(240, 180, 480, 360, PAL.black);
-
-    // Title text
-    const titleStyle = { fontSize: '20px', fill: '#ffd700', fontFamily: 'Courier New', stroke: '#000', strokeThickness: 4 };
-    this.add.text(240, 80, 'GreenMountainFog', titleStyle).setOrigin(0.5);
-    this.add.text(240, 108, 'The Journey', { ...titleStyle, fontSize: '14px', fill: '#aaffaa' }).setOrigin(0.5);
-
-    // Draw mini elf on title
+    const W = 480, H = 360;
     const g = this.add.graphics();
-    // simple elf silhouette
-    g.fillStyle(PAL.elfGreen, 1); g.fillRect(224, 150, 32, 28);
-    g.fillStyle(PAL.elfSkin, 1); g.fillRect(228, 138, 24, 18);
-    g.fillStyle(PAL.elfHair, 1); g.fillRect(228, 138, 24, 6);
 
-    this.add.text(240, 220, 'Press ENTER or SPACE to start', {
-      fontSize: '10px', fill: '#ffffff', fontFamily: 'Courier New'
+    // ── Dark dusk sky
+    g.fillStyle(0x060d1a, 1);
+    g.fillRect(0, 0, W, H);
+
+    // Subtle atmosphere bands
+    g.fillStyle(0x081626, 0.6);
+    g.fillRect(0, 0, W, 130);
+    g.fillStyle(0x0c1e10, 0.35);
+    g.fillRect(0, 180, W, 72);
+
+    // ── Stars
+    g.fillStyle(0xffffff, 1);
+    [
+      [22,12],[55,7],[88,21],[122,5],[158,17],[195,30],[238,10],[275,23],
+      [318,15],[362,37],[398,20],[438,9],[47,43],[96,50],[150,40],[210,57],
+      [260,46],[332,54],[390,42],[450,35],[70,71],[134,67],[194,79],[250,75],
+      [312,83],[370,71],[430,79],[16,87],[98,91],[168,95],[234,89],
+    ].forEach(([sx, sy]) => g.fillRect(sx, sy, 1, 1));
+
+    // Brighter twinkle stars (2×2)
+    g.fillStyle(0xeeeebb, 1);
+    [[44,27],[188,13],[342,45],[422,17]].forEach(([sx, sy]) => g.fillRect(sx, sy, 2, 2));
+
+    // ── Moon (upper right, big pixel moon)
+    const mx = 385, my = 62;
+    g.fillStyle(0x182a1e, 0.45); g.fillCircle(mx, my, 38);  // glow
+    g.fillStyle(0xc8d8b0, 1);   g.fillCircle(mx, my, 28);  // body
+    // Pixel craters
+    g.fillStyle(0xaabf96, 1);
+    g.fillRect(mx-12, my-8,  7, 5);
+    g.fillRect(mx+5,  my+6,  9, 6);
+    g.fillRect(mx-5,  my+12, 6, 4);
+    g.fillStyle(0xb5c8a0, 1);
+    g.fillRect(mx-9,  my-5,  5, 3);
+    g.fillRect(mx+7,  my+9,  7, 4);
+
+    // ── Far hills silhouette (blue-green, distant)
+    g.fillStyle(0x0c2218, 1);
+    g.fillPoints([
+      {x:0,y:240},{x:0,y:205},{x:55,y:168},{x:115,y:188},{x:180,y:155},
+      {x:250,y:172},{x:320,y:158},{x:390,y:178},{x:450,y:165},{x:480,y:175},{x:480,y:240},
+    ], true);
+
+    // ── Near hills (darker)
+    g.fillStyle(0x0a1a0e, 1);
+    g.fillPoints([
+      {x:0,y:260},{x:0,y:228},{x:45,y:215},{x:100,y:225},{x:165,y:210},
+      {x:230,y:220},{x:295,y:206},{x:360,y:218},{x:425,y:212},{x:480,y:220},{x:480,y:260},
+    ], true);
+
+    // ── Ground / dark grass field
+    g.fillStyle(0x081408, 1);
+    g.fillRect(0, 254, W, H - 254);
+
+    // Grass tufts at horizon line
+    g.fillStyle(0x0c1c0a, 1);
+    for (let gx = 0; gx < W; gx += 6) g.fillRect(gx, 252, 2, 4);
+    g.fillStyle(0x0e2210, 1);
+    for (let gx = 3; gx < W; gx += 10) g.fillRect(gx, 250, 1, 5);
+
+    // Moonlight reflection path on ground
+    g.fillStyle(0x142216, 0.35);
+    g.fillRect(310, 254, 170, H - 254);
+
+    // ── Sword & Shield emblem (centered, above title)
+    const shX = 218, shY = 26;
+    // Shield body
+    g.fillStyle(0x1a3a6a, 1); g.fillRect(shX, shY, 20, 22);
+    g.fillStyle(0x2a5a9a, 1); g.fillRect(shX+1, shY+1, 18, 20);
+    // Shield gold design
+    g.fillStyle(0xffd700, 1); g.fillRect(shX+4, shY+3, 12, 8);
+    g.fillStyle(0xffaa00, 1); g.fillRect(shX+6, shY+12, 8, 5);
+    g.fillStyle(0xffd700, 1); g.fillRect(shX+8, shY+17, 4, 3);
+    // Shield highlight
+    g.fillStyle(0x4a80c8, 1); g.fillRect(shX+1, shY+1, 3, 10);
+    g.fillStyle(0x6090d0, 1); g.fillRect(shX, shY, 20, 1);
+    // Sword (right of shield, pointing up-right)
+    const swX = shX + 24, swY = shY - 6;
+    g.fillStyle(0xd0e8f8, 1); g.fillRect(swX+1, swY,    3, 22);  // blade
+    g.fillStyle(0xffffff, 1); g.fillRect(swX+1, swY,    1, 16);  // shine
+    g.fillStyle(0xd0a030, 1); g.fillRect(swX-3, swY+21, 11, 3);  // guard
+    g.fillStyle(0xe8b840, 1); g.fillRect(swX-2, swY+21, 1,  3);  // guard shine
+    g.fillStyle(0xc09020, 1); g.fillRect(swX+1, swY+24, 3,  7);  // grip
+    g.fillStyle(0xd4a030, 1); g.fillRect(swX+2, swY+30, 2,  2);  // pommel
+
+    // ── Main title
+    this.add.text(W/2, 90, 'GreenMountainFog', {
+      fontSize: '22px', fill: '#ffd700',
+      fontFamily: 'Courier New', stroke: '#020804', strokeThickness: 5,
     }).setOrigin(0.5);
 
-    this.add.text(240, 300, '[ Use Arrow Keys to move ]', {
-      fontSize: '9px', fill: '#888888', fontFamily: 'Courier New'
+    this.add.text(W/2, 116, '— The Journey —', {
+      fontSize: '13px', fill: '#88ddaa',
+      fontFamily: 'Courier New', stroke: '#000', strokeThickness: 3,
     }).setOrigin(0.5);
 
-    this.add.text(240, 315, '[ Press SPACE / ENTER to interact ]', {
-      fontSize: '9px', fill: '#888888', fontFamily: 'Courier New'
-    }).setOrigin(0.5);
+    // ── Elf walking across the field (right to left = walking toward adventure)
+    const elf = this.add.image(-20, 248, 'playerRight').setScale(2);
+    const elfShadow = this.add.graphics();
+    elfShadow.fillStyle(0x000000, 0.25);
+    elfShadow.fillEllipse(0, 0, 20, 5);
 
-    // Blink
-    let visible = true;
+    let elfX = -20, walkTick = 0;
     this.time.addEvent({
-      delay: 500, loop: true,
-      callback: () => { visible = !visible; }
+      delay: 180, loop: true,
+      callback: () => {
+        walkTick++;
+        elfX += 1.2;
+        if (elfX > W + 24) elfX = -24;
+        elf.x = elfX;
+        elf.y = 248 + (walkTick % 2 === 0 ? 0 : 1);  // walk bob
+        elfShadow.x = elfX;
+        elfShadow.y = 260;
+      },
     });
 
-    this.input.keyboard.once('keydown-ENTER', () => this.scene.start('Overworld'));
-    this.input.keyboard.once('keydown-SPACE', () => this.scene.start('Overworld'));
+    // ── Start prompts (keyboard + touch)
+    const pressText = this.add.text(W/2, 305, 'PRESS SPACE  OR  ENTER', {
+      fontSize: '11px', fill: '#ffffff',
+      fontFamily: 'Courier New', stroke: '#000', strokeThickness: 3,
+    }).setOrigin(0.5);
+
+    const tapText = this.add.text(W/2, 321, 'TAP ANYWHERE TO START', {
+      fontSize: '10px', fill: '#aaeebb',
+      fontFamily: 'Courier New', stroke: '#000', strokeThickness: 2,
+    }).setOrigin(0.5);
+
+    this.add.text(W/2, 348, '© 2024 GreenMountainFog', {
+      fontSize: '8px', fill: '#335533', fontFamily: 'Courier New',
+    }).setOrigin(0.5);
+
+    // ── Blink both prompts together
+    let blinkOn = true;
+    this.time.addEvent({
+      delay: 550, loop: true,
+      callback: () => { blinkOn = !blinkOn; pressText.setVisible(blinkOn); tapText.setVisible(blinkOn); },
+    });
+
+    // ── Input: keyboard + touch/tap
+    const startGame = () => this.scene.start('Overworld');
+    this.input.keyboard.once('keydown-ENTER', startGame);
+    this.input.keyboard.once('keydown-SPACE', startGame);
+    this.input.once('pointerdown', startGame);
   }
 }
 
