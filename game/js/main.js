@@ -1069,10 +1069,10 @@ class HouseScene extends Phaser.Scene {
     // Constrain physics world to the room area
     this.physics.world.setBounds(ox, oy, roomPxW, roomPxH);
 
-    // Camera: NO zoom for interior — show the whole room nicely centered
-    this.cameras.main.setZoom(1);
-    // Center camera on room
-    this.cameras.main.centerOn(ox + roomPxW/2, oy + roomPxH/2);
+    // Camera: zoom in on the room and center it
+    this.cameras.main.setZoom(3);
+    this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
+    this.cameras.main.setBounds(ox - TILE, oy - TILE, roomPxW + TILE*2, roomPxH + TILE*2);
 
     this.cursors=this.input.keyboard.createCursorKeys();
     this.spaceKey=this.input.keyboard.addKey('SPACE');
