@@ -857,20 +857,11 @@ class OverworldScene extends Phaser.Scene {
     this.physics.add.collider(this.player, cg);
     if (this.professor) this.physics.add.collider(this.player, this.professor);
 
-    // Door zones - walk into doors to enter houses
-    this.doorZones = [];
+    // Track door positions for walk-in entry
+    this.doorTiles = [];
     for (let y=0;y<MAP_H;y++) for(let x=0;x<MAP_W;x++) {
       if (this.mapData[y][x]===12) {
-        const dz = this.add.zone(x*TILE+TILE/2, y*TILE+TILE/2, TILE, TILE);
-        this.physics.add.existing(dz, true);
-        dz.houseNum = (x<=15) ? 1 : 2;
-        this.doorZones.push(dz);
-        this.physics.add.overlap(this.player, dz, ()=>{
-          if (!this.enteringHouse) {
-            this.enteringHouse = true;
-            this.enterHouse(dz.houseNum);
-          }
-        });
+        this.doorTiles.push({x:x, y:y, houseNum: (x<=15)?1:2});
       }
     }
     this.enteringHouse = false;
@@ -914,6 +905,21 @@ class OverworldScene extends Phaser.Scene {
     } else {
       this.player.setTexture('player_'+this.facing);
       this.walkTimer=0; this.walkFrame=0;
+    }
+
+    // Check if player walked into a door
+    if (!this.enteringHouse && (vx!==0||vy!==0)) {
+      const ptx = Math.floor(this.player.x / TILE);
+      const pty = Math.floor((this.player.y + 4) / TILE); // offset down since body is at bottom
+      for (const dt of this.doorTiles) {
+        // Check if player is on the door tile or one tile below facing up
+        if ((ptx===dt.x && pty===dt.y) ||
+            (ptx===dt.x && pty===dt.y+1 && this.facing==='up')) {
+          this.enteringHouse = true;
+          this.enterHouse(dt.houseNum);
+          return;
+        }
+      }
     }
 
     this.actionCooldown -= delta;
