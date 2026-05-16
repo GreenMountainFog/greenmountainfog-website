@@ -974,45 +974,82 @@ class HouseScene extends Phaser.Scene {
   constructor() { super('HouseScene'); }
   create(data) {
     this.houseNum = data.houseNum||1;
-    const W=8, H=6;
+    const W=8, H=7; // room size in tiles
+    // Center the room in the game world
+    const roomPxW = W*TILE, roomPxH = H*TILE;
+    const ox = Math.floor((GAME_W - roomPxW)/2);
+    const oy = Math.floor((GAME_H - roomPxH)/2);
+
+    // Dark background behind the room
+    const darkBg = this.add.graphics();
+    darkBg.fillStyle(0x080810, 1);
+    darkBg.fillRect(0, 0, GAME_W, GAME_H);
+
+    // Draw interior tiles
     for (let y=0;y<H;y++) for(let x=0;x<W;x++) {
-      const px=x*TILE+64, py=y*TILE+48;
+      const px=ox+x*TILE, py=oy+y*TILE;
       this.add.image(px+TILE/2, py+TILE/2, y===0?'intWall':'floor');
     }
+
+    // Walls as collision (top row + left/right invisible barriers + bottom except exit)
     const walls = this.physics.add.staticGroup();
-    for(let x=0;x<W;x++) walls.add(this.physics.add.staticImage(x*TILE+64+TILE/2, 48+TILE/2,'intWall').setVisible(false));
+    // Top wall
+    for(let x=0;x<W;x++) {
+      walls.add(this.physics.add.staticImage(ox+x*TILE+TILE/2, oy+TILE/2,'intWall').setVisible(false));
+    }
+    // Left and right walls
     for(let y=0;y<H;y++) {
-      walls.add(this.physics.add.staticImage(64-TILE/2,y*TILE+48+TILE/2,'intWall').setVisible(false));
-      walls.add(this.physics.add.staticImage(64+W*TILE+TILE/2,y*TILE+48+TILE/2,'intWall').setVisible(false));
+      walls.add(this.physics.add.staticImage(ox-TILE/2, oy+y*TILE+TILE/2,'intWall').setVisible(false));
+      walls.add(this.physics.add.staticImage(ox+roomPxW+TILE/2, oy+y*TILE+TILE/2,'intWall').setVisible(false));
+    }
+    // Bottom wall except exit column
+    const exitCol = 3;
+    for(let x=0;x<W;x++) {
+      if (x !== exitCol) {
+        walls.add(this.physics.add.staticImage(ox+x*TILE+TILE/2, oy+roomPxH+TILE/2,'intWall').setVisible(false));
+      }
     }
 
-    const exitX=64+3*TILE+TILE/2, exitY=48+(H-1)*TILE+TILE/2;
+    // Exit mat at bottom center
+    const exitX=ox+exitCol*TILE+TILE/2, exitY=oy+(H-1)*TILE+TILE/2;
     this.add.image(exitX, exitY, 'exitMat');
     this.exitZone = this.add.zone(exitX, exitY+TILE/2, TILE, 8);
     this.physics.add.existing(this.exitZone, true);
 
+    // Chest in house 1
     if (this.houseNum===1 && !STATE.items.sword) {
-      this.chest = this.physics.add.sprite(64+2*TILE+TILE/2, 48+TILE+TILE/2, 'chest');
+      this.chest = this.physics.add.sprite(ox+2*TILE+TILE/2, oy+TILE+TILE/2, 'chest');
       this.chest.setImmovable(true);
     }
+    // Table in house 2
     if (this.houseNum===2) {
       const tbl=this.add.graphics();
-      fr(tbl, 64+4*TILE, 48+2*TILE, TILE*2, TILE, 0x6b4226);
-      fr(tbl, 64+4*TILE+2, 48+2*TILE+2, TILE*2-4, TILE-4, 0x8b5a36);
-      walls.add(this.physics.add.staticImage(64+5*TILE,48+2*TILE+TILE/2,'intWall').setVisible(false));
+      fr(tbl, ox+4*TILE, oy+2*TILE, TILE*2, TILE, 0x6b4226);
+      fr(tbl, ox+4*TILE+2, oy+2*TILE+2, TILE*2-4, TILE-4, 0x8b5a36);
+      walls.add(this.physics.add.staticImage(ox+5*TILE, oy+2*TILE+TILE/2,'intWall').setVisible(false));
     }
 
+    // Player spawns near exit, facing up
     this.player = this.physics.add.sprite(exitX, exitY-TILE, 'player_up');
     this.player.body.setSize(12,12); this.player.body.setOffset(2,12);
     this.player.setDepth(10);
+    this.player.setCollideWorldBounds(true);
     this.facing='up'; this.walkFrame=0; this.walkTimer=0;
+
     this.physics.add.collider(this.player, walls);
     if(this.chest) this.physics.add.collider(this.player, this.chest);
     this.physics.add.overlap(this.player, this.exitZone, ()=>{
       if(this.facing==='down') { STATE.inHouse=false; this.scene.start('OverworldScene'); }
     });
 
-    this.cameras.main.setZoom(2.5);
+    // Constrain physics world to the room area
+    this.physics.world.setBounds(ox, oy, roomPxW, roomPxH);
+
+    // Camera: NO zoom for interior — show the whole room nicely centered
+    this.cameras.main.setZoom(1);
+    // Center camera on room
+    this.cameras.main.centerOn(ox + roomPxW/2, oy + roomPxH/2);
+
     this.cursors=this.input.keyboard.createCursorKeys();
     this.spaceKey=this.input.keyboard.addKey('SPACE');
     this.enterKey=this.input.keyboard.addKey('ENTER');
