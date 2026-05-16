@@ -857,6 +857,24 @@ class OverworldScene extends Phaser.Scene {
     this.physics.add.collider(this.player, cg);
     if (this.professor) this.physics.add.collider(this.player, this.professor);
 
+    // Door zones - walk into doors to enter houses
+    this.doorZones = [];
+    for (let y=0;y<MAP_H;y++) for(let x=0;x<MAP_W;x++) {
+      if (this.mapData[y][x]===12) {
+        const dz = this.add.zone(x*TILE+TILE/2, y*TILE+TILE/2, TILE, TILE);
+        this.physics.add.existing(dz, true);
+        dz.houseNum = (x<=15) ? 1 : 2;
+        this.doorZones.push(dz);
+        this.physics.add.overlap(this.player, dz, ()=>{
+          if (!this.enteringHouse) {
+            this.enteringHouse = true;
+            this.enterHouse(dz.houseNum);
+          }
+        });
+      }
+    }
+    this.enteringHouse = false;
+
     // Camera - zoomed in close (SNES feel)
     this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
     this.cameras.main.setZoom(2.5);
