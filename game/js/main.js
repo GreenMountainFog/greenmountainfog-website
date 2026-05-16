@@ -439,7 +439,7 @@ function genTextures(scene) {
 
   // -- Professor NPC (16x24, robed scholar) --
   g = scene.make.graphics({add:false});
-  fr(g, 3, H-2, 10, 2, 0x000000, 0.2); // shadow
+  fr(g, 3, CHAR_H-2, 10, 2, 0x000000, 0.2); // shadow
   // Head/hair
   fr(g, 4, 0, 8, 4, C.profHair);
   fr(g, 5, 0, 6, 2, 0xe0e0e8); // highlight
