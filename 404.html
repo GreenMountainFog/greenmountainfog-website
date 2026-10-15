@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found | Green Mountain Fog</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@300..800&family=Young+Serif&display=swap">
+  <link rel="stylesheet" href="/css/site.css">
+  <style>
+    .lost { position: relative; isolation: isolate; min-height: 100svh; display: grid; align-content: center; gap: 1.25rem;
+            padding: 6rem var(--gutter); color: var(--haze); background: var(--ink); overflow: hidden; }
+    .lost img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; filter: blur(14px); scale: 1.1; }
+    .lost::before { content: ""; position: absolute; inset: 0; z-index: -1; background: rgb(22 26 61 / .55); }
+    .lost h1 { font-size: var(--step-4); max-width: 12ch; }
+    .lost p { max-width: 30em; font-size: 1.2rem; }
+    .lost .actions { margin-top: .5rem; }
+  </style>
+</head>
+<body>
+  <main class="lost">
+    <img src="/images/scene.svg" alt="" width="1600" height="900">
+    <h1>Lost in the fog.</h1>
+    <p>There’s no page at this address. It may have moved when the site was redesigned.</p>
+    <div class="actions">
+      <a class="btn btn-light" href="/">Go to the home page</a>
+      <a class="btn btn-outline-light" href="mailto:hello@greenmountainfog.com">Email Noah</a>
+    </div>
+  </main>
+</body>
+</html>

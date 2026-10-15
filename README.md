@@ -1,14 +1,18 @@
-# greenmountainfog.com
+# greenmountainfog.com: GMF 3.0
 
-Website for Green Mountain Fog — Vermont-based IT consulting by Noah Duncan.
+Website for Green Mountain Fog, patient IT help in Burlington, Vermont, from Noah Duncan.
 
-Static bundle exported from Manus (Vite build output). Deploy-ready as-is.
+Plain HTML, CSS and JavaScript. No build step: edit the files and push.
+Hosted on **Cloudflare Pages**, which deploys automatically on every push to `main`.
+Other branches get their own preview link.
 
-## Stack
+## The idea
 
-- Pre-built static HTML + hashed CSS/JS assets in `assets/`.
-- WebP imagery in `images/`.
-- Hosted on **Cloudflare Pages** — auto-deploys on push to `main`.
+The page opens on a fogged-up window looking out over Lake Champlain at sunset,
+with the Adirondacks across the water and the Burlington breakwater lighthouse.
+Visitors can wipe the glass with the cursor (or a sideways swipe on a phone),
+and the fog slowly creeps back. Scrolling clears the window completely.
+The page ends on the same view, fully clear, behind the contact section.
 
 ## Local preview
 
@@ -22,12 +26,30 @@ Then open <http://localhost:8080>.
 
 ```
 .
-├── index.html              # the whole site
-├── _redirects              # Cloudflare Pages SPA fallback
-├── assets/                 # built CSS + JS (hashed filenames)
-└── images/                 # WebP imagery
+├── index.html        # the whole site: all copy lives here
+├── 404.html          # "Lost in the fog" page for bad links
+├── css/site.css      # styles; palette and type scale at the top
+├── js/site.js        # the fogged window, nav, menu
+├── images/
+│   ├── scene.svg     # the Lake Champlain sunset artwork
+│   ├── favicon.svg
+│   └── og-card.jpg   # preview image for links shared on social media
+└── game/             # The Journey (Phaser), self-contained
 ```
 
-## Updating the site
+## Design notes
 
-The build comes from Manus. To make content or design changes, edit the source in Manus and re-export the Cloudflare Pages bundle, then replace the files in this repo and push to `main`.
+- Palette: blue hour over the lake. Indigo night `#161a3d`, indigo `#2e3474`,
+  fog lilac `#c9c4e3`, haze `#f3f2f8`, sunset apricot `#f6ad8a` (accents only).
+- Type: Young Serif for headings; Atkinson Hyperlegible Next for everything else,
+  a typeface designed for readers with low vision.
+- The fog is a canvas: a blurred copy of the scene with a milky film and droplets.
+  Wipes are painted into a separate mask, which fades over about ten seconds.
+- Reduced motion: no zoom or regrowth; the glass can still be wiped.
+- Without JavaScript, a CSS blur stands in for the fog.
+
+## History
+
+- `backup/pre-redesign-2026-10-15`: the Manus-built site that was live before the redesigns
+- `redesign`: the first redesign (green, fog over the Green Mountains)
+- `gmf3.0`: this version
